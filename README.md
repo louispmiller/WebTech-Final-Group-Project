@@ -4,8 +4,8 @@ The final project for the B3 Web Technologies for Data-Centric Applications &amp
 ## Work Distribution
 1. HUGO Morais: Authentication & Users
 2. Sidi Mohamed Ebnou Oumar: City Search & Registration
-3.DJAMAL Rachid: Current Weather Module
-4.MILLER Louis: Historical Data & Analytics
+3. DJAMAL Rachid: Current Weather Module
+4. MILLER Louis: Historical Data & Analytics
 5. QADI Aya: Dashboard & Data Visualization
 6. NKONGHO Ojong: Backend Architecture & Integration
 
