@@ -1,0 +1,82 @@
+/* Author: Student 3 */
+/* Styling for the current weather card component */
+
+.weather-card {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    padding: 1.25rem 1.5rem;
+    max-width: 420px;
+    font-family: inherit;
+}
+
+.weather-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.weather-card__header h3 {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.weather-card__refresh {
+    background: none;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.25rem 0.6rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+.weather-card__refresh:hover {
+    background: #f2f2f2;
+}
+
+.weather-card__body {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    text-align: center;
+}
+
+.weather-card__metric {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.weather-card__value {
+    font-size: 1.4rem;
+    font-weight: 600;
+}
+
+.weather-card__label {
+    font-size: 0.8rem;
+    color: #666;
+    margin-top: 0.15rem;
+}
+
+.weather-card__footer {
+    margin-top: 1rem;
+    font-size: 0.78rem;
+    color: #999;
+    text-align: right;
+}
+
+.weather-card--loading,
+.weather-card--error {
+    text-align: center;
+    color: #666;
+}
+
+.weather-card--error {
+    color: #b00020;
+}
+
+.weather-card__error-detail {
+    font-size: 0.85rem;
+    opacity: 0.8;
+}

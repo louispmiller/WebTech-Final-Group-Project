@@ -1,0 +1,24 @@
+<!-- Author: Student 3 -->
+<!-- Snippet to drop into the main dashboard page (Student 5's layout) -->
+
+<link rel="stylesheet" href="frontend/css/weather-card.css">
+
+<!-- The dashboard page should have this container somewhere in the layout -->
+<section id="current-weather-section">
+    <div id="weather-card-container">
+        <p>Select a city to see current weather.</p>
+    </div>
+</section>
+
+<script src="frontend/js/weather-card.js"></script>
+
+<!--
+  Integration contract with the City Search module (Student 2):
+  when the user picks a city, dispatch a CustomEvent like this:
+
+  document.dispatchEvent(new CustomEvent('city-selected', {
+      detail: { cityId: selectedCity.id }
+  }));
+
+  weather-card.js listens for this event and loads the current weather automatically.
+-->
