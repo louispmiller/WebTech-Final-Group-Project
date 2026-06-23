@@ -1,4 +1,4 @@
--- Author: Student 3
+-- Author: Rachid Djamal
 -- TEMPORARY minimal schema, added only so the Current Weather Module could
 -- be tested locally before anyone else had pushed code.
 -- `cities` is included only because `weather_data` has a foreign key to it

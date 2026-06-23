@@ -1,5 +1,5 @@
 <?php
-// Author: Student 3
+// Author: Rachid Djamal
 // Model: maps directly to the `weather_data` table.
 // SQL work (insertion + retrieval of current weather) lives here.
 

@@ -1,5 +1,5 @@
 <?php
-// Author: Student 3
+// Author: Rachid Djamal
 // This is a SNIPPET to merge into the team's main router (Student 6's
 // routing system), not a standalone file. Adapt to whatever router
 // pattern the team agrees on (front controller, switch on $_SERVER['REQUEST_URI'], etc.)
