@@ -134,9 +134,9 @@
                 // 4. Handle the response
                 if (response.ok) {
                     // 5. Store the token in localStorage
-                    localStorage.setItem('auth_token', data.token);
-                    localStorage.setItem('user_id', data.user_id);
-                    localStorage.setItem('username', data.username);
+                    localStorage.setItem('auth_token', data.data.token);
+                    localStorage.setItem('user_id', data.data.user_id);
+                    localStorage.setItem('username', data.data.username);
 
                     message.className = 'success';
                     message.textContent = 'Login successful! Redirecting...';
