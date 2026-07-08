@@ -1,5 +1,5 @@
 <?php
-// Author: Rachid Djamal
+// Author: Student 3
 // TEMPORARY placeholder shared PDO connection helper.
 // Nothing existed in the repo yet, so this was added only so the Current
 // Weather Module could be tested locally. This is Student 6's
