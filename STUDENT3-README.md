@@ -1,6 +1,6 @@
-# Student 3 — Current Weather Module
+# Rachid Djamal — Current Weather Module
 
-This package covers everything assigned to **Student 3** in the Smart City Data
+This package covers everything assigned to **Rachid Djamal** in the Smart City Data
 Dashboard project: external API requests, backend weather service, SQL
 insertion, weather display cards, current-weather endpoints, and frontend
 integration.
@@ -60,6 +60,6 @@ Both endpoints read/write the `weather_data` table from the shared schema
 ## Note on code signing
 
 Per the assignment requirements, every file above starts with
-`// Author: Student 3` (or `<!-- Author: Student 3 -->` for HTML) — replace
+`// Author: Rachid Djamal` (or `<!-- Author: Rachid Djamal -->` for HTML) — replace
 with your actual name before submitting, since the assignment requires real
 names, not placeholders.

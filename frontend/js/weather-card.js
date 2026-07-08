@@ -1,4 +1,4 @@
-// Author: Student 3
+// Author: Rachid Djamal
 // Frontend integration for the Current Weather Module.
 // Exposes loadCurrentWeather(cityId) which fetches from the backend
 // and renders a weather card into #weather-card-container.
