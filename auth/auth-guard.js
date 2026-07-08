@@ -2,7 +2,7 @@
 // Description: Auth guard - redirects to login if user is not authenticated
 
 function checkAuth() {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('auth_token');
 
     // If no token found, redirect to login
     if (!token) {
@@ -12,7 +12,7 @@ function checkAuth() {
 
 function logout() {
     // Remove all user data from localStorage
-    localStorage.removeItem('token');
+    localStorage.removeItem('auth_token');
     localStorage.removeItem('user_id');
     localStorage.removeItem('username');
 
