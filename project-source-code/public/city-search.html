@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>City Search & Registration - Smart City Dashboard</title>
+<link rel="stylesheet" href="assets/css/city-search.css">
+</head>
+<body>
+    <main class="container">
+        <h1>City Search &amp; Registration</h1>
+        <p class="subtitle">Search a city (via Nominatim/OpenStreetMap), then register it into the dashboard.</p>
+
+        <form id="search-form" class="search-form">
+            <input type="text" id="query" name="query" placeholder="e.g. Paris" minlength="2" required autocomplete="off">
+            <button type="submit">Search</button>
+        </form>
+
+        <p id="status-message" class="status-message" hidden></p>
+
+        <ul id="results" class="results-list"></ul>
+
+        <section>
+            <h2>Registered cities</h2>
+            <table id="cities-table" class="cities-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Country</th>
+                        <th>Latitude</th>
+                        <th>Longitude</th>
+                        <th>Population</th>
+                        <th>Added</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </section>
+    </main>
+
+    <script src="assets/js/city-search.js"></script>
+</body>
+</html>
