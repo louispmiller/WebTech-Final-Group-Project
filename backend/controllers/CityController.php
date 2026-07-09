@@ -1,9 +1,5 @@
 <?php
-// Author: Ojong Bessong NKONGHO
-// City controller - part of backend architecture module.
-// Handles city endpoints and external API integration
-// with Nominatim and REST Countries.
-// Will be extended by Sidi's module once his branch is merged.
+// Author: Sidi Mohamed Ebnou Oumar
 
 require_once __DIR__ . '/../models/City.php';
 
@@ -18,14 +14,14 @@ class CityController
         $this->cityModel = new City($db);
     }
 
-    // GET /api/cities - returns all saved cities
+    // GET /api/cities - all saved cities
     public function index()
     {
         $cities = $this->cityModel->getAll();
         Response::success($cities);
     }
 
-    // GET /api/cities/show?id=1 - returns one city by id
+    // GET /api/cities/show?id=1
     public function show()
     {
         $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
@@ -45,9 +41,8 @@ class CityController
         Response::success($city);
     }
 
-    // POST /api/cities - add a new city by name
-    // calls Nominatim for coordinates and REST Countries for population
-    // body: { "name": "Paris" }
+    // POST /api/cities - body: { "name": "Paris" }
+    // resolves coordinates/country via Nominatim, then saves
     public function store()
     {
         $body = json_decode(file_get_contents('php://input'), true) ?? [];
@@ -58,25 +53,22 @@ class CityController
             return;
         }
 
-        // avoid duplicates - return existing city if already saved
+        // avoid duplicates - return the existing city instead of erroring
         $existing = $this->cityModel->findByName($name);
         if ($existing) {
             Response::success($existing);
             return;
         }
 
-        // step 1: get coordinates from Nominatim (OpenStreetMap)
         $geo = $this->fetchFromNominatim($name);
         if (!$geo) {
             Response::error('Could not find coordinates for that city', 404);
             return;
         }
 
-        // step 2: get country population from REST Countries
         $countryData = $this->fetchFromRestCountries($geo['country']);
         $population  = $countryData['population'] ?? null;
 
-        // step 3: save to database
         $id = $this->cityModel->insert(
             $geo['name'],
             $geo['country'],
@@ -95,22 +87,26 @@ class CityController
         ], 201);
     }
 
-    // calls the Nominatim geocoding API to get coordinates for a city name
+    // Nominatim (OpenStreetMap) geocoding - no API key needed.
+    // Nominatim's usage policy requires a descriptive User-Agent, otherwise
+    // requests get blocked.
     private function fetchFromNominatim($cityName)
     {
         $url = 'https://nominatim.openstreetmap.org/search?' . http_build_query([
             'q'              => $cityName,
             'format'         => 'json',
             'limit'          => 1,
-            'addressdetails' => 1
+            'addressdetails' => 1,
+            // ask for English names so "country" is consistent
+            // regardless of the city's local language (e.g. "Cameroon"
+            // instead of "Cameroun")
+            'accept-language' => 'en'
         ]);
 
         $context = stream_context_create([
             'http' => [
                 'method'  => 'GET',
                 'timeout' => 8,
-                // Nominatim requires a User-Agent header
-                // requests without it get blocked
                 'header'  => 'User-Agent: SmartCityDashboard/1.0'
             ]
         ]);
@@ -124,7 +120,6 @@ class CityController
         $result = $data[0];
 
         return [
-            // prefer city, fall back to town, then village
             'name'    => $result['address']['city']
                       ?? $result['address']['town']
                       ?? $result['address']['village']
@@ -135,7 +130,12 @@ class CityController
         ];
     }
 
-    // calls REST Countries API to get population for a country name
+    // REST Countries - population lookup, used as a best-effort enrichment.
+    // NOTE: as of this project, the free v3.1 endpoint used here has been
+    // deprecated by the provider (it now requires a paid key on v5) and
+    // returns a {"success":false,...} body instead of country data. This
+    // is left in place per the project's required API list, but it fails
+    // silently (population stays null) instead of blocking registration.
     private function fetchFromRestCountries($countryName)
     {
         $url = 'https://restcountries.com/v3.1/name/'
