@@ -50,8 +50,10 @@ class AuthController {
 
         http_response_code(201);
         echo json_encode([
-            'message' => 'User created successfully',
-            'user_id' => $userId
+            'success' => true,
+            'data' => [
+                'user_id' => $userId
+            ]
         ]);
     }
 
@@ -89,10 +91,12 @@ class AuthController {
 
         http_response_code(200);
         echo json_encode([
-            'message'  => 'Login successful',
-            'token'    => $token,
-            'user_id'  => $user['id'],
-            'username' => $user['username']
+            'success' => true,
+            'data' => [
+                'token'    => $token,
+                'user_id'  => $user['id'],
+                'username' => $user['username']
+            ]
         ]);
     }
 }
