@@ -18,7 +18,9 @@ class Response
             'success' => true,
             'data'    => $data
         ]);
-        exit;
+        if (php_sapi_name() !== 'cli') {
+            exit;
+        }
     }
 
     public static function error($message, $code = 400)
@@ -29,6 +31,8 @@ class Response
             'success' => false,
             'error'   => $message
         ]);
-        exit;
+        if (php_sapi_name() !== 'cli') {
+            exit;
+        }
     }
 }
