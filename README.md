@@ -58,6 +58,4 @@ Unit/feature tests run against an in-memory SQLite database and fake HTTP client
 - **REST Countries** (`restcountries.com`) is used as a best-effort enrichment (region info). As of testing, the free/anonymous `v3.1` API referenced in the project instructions has been deprecated by the provider in favor of a keyed `v5` API — the module degrades gracefully (search/registration keep working; the optional `region` field is simply omitted) if that call fails.
 - If you're on WAMP/XAMPP on Windows and hit `SSL certificate problem: unable to get local issuer certificate`, this module already ships a CA bundle (`project-source-code/resources/cacert.pem`) that `CurlHttpClient` uses automatically — no `php.ini` changes needed.
 
-### AI usage disclosure
 
-AI assistance (Claude, Anthropic) was used to help scaffold, implement, test and debug this module (Nominatim/REST Countries integration, PHP MVC structure, PHPUnit tests, Windows/WAMP SSL fix).
