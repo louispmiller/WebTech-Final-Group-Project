@@ -1,5 +1,5 @@
 <?php
-// Author: Rachid Djamal
+// Author: Student 3
 // Controller for the "Current Weather Module".
 // Exposes:
 //   GET  /api/weather?city_id=1   -> current weather for a city

@@ -1,5 +1,5 @@
 <?php
-// Author: Rachid Djamal
+// Author: Student 3
 // Responsible for talking to the external Open-Meteo API.
 // Keeps all "external API integration" logic in one place (MVC: this is
 // effectively a Service layer used by the Controller).
