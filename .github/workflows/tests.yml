@@ -1,0 +1,31 @@
+name: Tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  phpunit:
+    name: PHPUnit (City Search & Registration)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.1"
+          extensions: pdo, pdo_sqlite, curl, json
+          coverage: none
+
+      - name: Install Composer dependencies
+        working-directory: project-source-code
+        run: composer install --prefer-dist --no-progress --no-interaction
+
+      - name: Run PHPUnit
+        working-directory: project-source-code
+        run: vendor/bin/phpunit
