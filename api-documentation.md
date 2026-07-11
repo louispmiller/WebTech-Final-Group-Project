@@ -89,4 +89,4 @@ Resolve a city by name via Nominatim and persist it.
 | API | Purpose | Auth |
 |---|---|---|
 | [Nominatim](https://nominatim.openstreetmap.org) (OpenStreetMap) | Geocoding: coordinates, country name/code, population | None (requires a descriptive `User-Agent` per usage policy) |
-| [REST Countries](https://restcountries.com) | Best-effort region enrichment | None used — note: the free `v3.1` endpoint from the original project instructions is now deprecated by the provider (requires a paid key on `v5`); this module treats it as optional and degrades gracefully |
+| [REST Countries](https://restcountries.com) v5 | Best-effort region enrichment | `Authorization: Bearer {RESTCOUNTRIES_API_KEY}` — free key from [restcountries.com/sign-up](https://restcountries.com/sign-up). The `v3.1` endpoint from the original project instructions is discontinued by the provider (`{"success":false}` on every call); this module treats the enrichment as optional and degrades gracefully (omits `region`) if no key is configured or the call fails |

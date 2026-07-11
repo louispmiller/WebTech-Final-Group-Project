@@ -1,4 +1,5 @@
 <?php
+// Author: Sidi Mohamed Ebnou Oumar
 
 require dirname(__DIR__) . '/vendor/autoload.php';
 

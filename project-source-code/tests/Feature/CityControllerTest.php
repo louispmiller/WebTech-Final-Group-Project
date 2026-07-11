@@ -16,6 +16,9 @@ class CityControllerTest extends TestCase
 
     protected function setUp(): void
     {
+        putenv('RESTCOUNTRIES_API_KEY=test_key_123');
+        $_ENV['RESTCOUNTRIES_API_KEY'] = 'test_key_123';
+
         $pdo = new PDO('sqlite::memory:');
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
@@ -31,9 +34,16 @@ class CityControllerTest extends TestCase
                 ],
             ])
             ->respondWhenUrlContains('restcountries.com', [
-                'name' => ['common' => 'France'],
-                'cca2' => 'FR',
-                'region' => 'Europe',
+                'data' => [
+                    'objects' => [
+                        [
+                            'names' => ['common' => 'France'],
+                            'codes' => ['alpha_2' => 'FR'],
+                            'region' => 'Europe',
+                            'population' => 69081996,
+                        ],
+                    ],
+                ],
             ]);
 
         $this->controller = new CityController(
@@ -41,6 +51,12 @@ class CityControllerTest extends TestCase
             new GeocodingService($http),
             new CountryService($http)
         );
+    }
+
+    protected function tearDown(): void
+    {
+        putenv('RESTCOUNTRIES_API_KEY');
+        unset($_ENV['RESTCOUNTRIES_API_KEY']);
     }
 
     public function testStoreRegistersANewCity(): void

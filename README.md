@@ -55,6 +55,11 @@ Unit/feature tests run against an in-memory SQLite database and fake HTTP client
 ### Note on external APIs
 
 - **Nominatim** (geolocation + country name/code) works out of the box with no API key. A descriptive `User-Agent` is required by Nominatim's usage policy (see `HTTP_USER_AGENT` in `.env.example`).
-- **REST Countries** (`restcountries.com`) is used as a best-effort enrichment (region info). As of testing, the free/anonymous `v3.1` API referenced in the project instructions has been deprecated by the provider in favor of a keyed `v5` API — the module degrades gracefully (search/registration keep working; the optional `region` field is simply omitted) if that call fails.
+- **REST Countries** (`restcountries.com`) is used as a best-effort enrichment (region info). The free/anonymous `v3.1` API referenced in the project instructions has been discontinued by the provider — every `v3.1` call now returns `{"success": false}`. The module has been migrated to **v5**, which requires a free API key:
+  1. Sign up at <https://restcountries.com/sign-up>.
+  2. Create an API key from your dashboard.
+  3. Set `RESTCOUNTRIES_API_KEY` in your `.env` (see `.env.example`).
+
+  Without a key configured, city search/registration still work fully — the optional `region` field is simply omitted (see `CountryService::resolveRegion`, which catches the missing-key error the same way it would catch a network failure).
 - If you're on WAMP/XAMPP on Windows and hit `SSL certificate problem: unable to get local issuer certificate`, this module already ships a CA bundle (`project-source-code/resources/cacert.pem`) that `CurlHttpClient` uses automatically — no `php.ini` changes needed.
 

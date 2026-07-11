@@ -1,4 +1,5 @@
 <?php
+// Author: Sidi Mohamed Ebnou Oumar
 
 namespace App\Services;
 
@@ -11,41 +12,51 @@ use RuntimeException;
 class CountryService
 {
     private string $baseUrl;
+    private ?string $apiKey;
 
     public function __construct(private HttpClientInterface $http)
     {
-        $this->baseUrl = rtrim(Env::get('RESTCOUNTRIES_BASE_URL', 'https://restcountries.com/v3.1'), '/');
+        // v3.1 (the version referenced in the original project instructions) was
+        // discontinued by the provider — every call now returns {"success":false}.
+        // v5 replaces it (different host, different endpoint shape, different
+        // response schema) and requires a free API key (sign up at
+        // https://restcountries.com/sign-up), sent as a Bearer token.
+        $this->baseUrl = rtrim(Env::get('RESTCOUNTRIES_BASE_URL', 'https://api.restcountries.com/countries/v5'), '/');
+        $this->apiKey = Env::get('RESTCOUNTRIES_API_KEY') ?: null;
     }
 
     /**
-     * Resolve a country's common name from its ISO 3166-1 alpha-2 code.
+     * Resolve a country's common name/region/population from its ISO 3166-1 alpha-2 code.
      *
-     * @return array{name: string, code: string, region: ?string}
+     * @return array{name: string, code: string, region: ?string, population: ?int}
      */
     public function getByCode(string $alpha2Code): array
     {
-        $code = strtolower(trim($alpha2Code));
+        $code = strtoupper(trim($alpha2Code));
         if ($code === '') {
             throw new RuntimeException('Country code must not be empty');
         }
 
-        $url = $this->baseUrl . '/alpha/' . urlencode($code) . '?fields=name,cca2,region';
+        if ($this->apiKey === null) {
+            throw new RuntimeException('RESTCOUNTRIES_API_KEY is not configured');
+        }
 
-        $decoded = $this->http->getJson($url);
+        $url = $this->baseUrl . '/codes.alpha_2/' . urlencode($code);
 
-        // The API returns a single object for one code, but be defensive in case
-        // a list is returned instead (matches behaviour of the /alpha?codes= variant).
-        $isList = array_keys($decoded) === range(0, count($decoded) - 1);
-        $country = $isList ? ($decoded[0] ?? null) : $decoded;
+        $decoded = $this->http->getJson($url, ['Authorization' => 'Bearer ' . $this->apiKey]);
 
-        if (!is_array($country) || !isset($country['name']['common'])) {
+        // v5 wraps matches in data.objects[] (even for an exact single-code lookup).
+        $country = $decoded['data']['objects'][0] ?? null;
+
+        if (!is_array($country) || !isset($country['names']['common'])) {
             throw new RuntimeException("Country not found for code: {$alpha2Code}");
         }
 
         return [
-            'name' => (string) $country['name']['common'],
-            'code' => strtoupper($country['cca2'] ?? $alpha2Code),
+            'name' => (string) $country['names']['common'],
+            'code' => strtoupper($country['codes']['alpha_2'] ?? $alpha2Code),
             'region' => $country['region'] ?? null,
+            'population' => isset($country['population']) ? (int) $country['population'] : null,
         ];
     }
 }

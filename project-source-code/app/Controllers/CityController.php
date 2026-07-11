@@ -1,4 +1,5 @@
 <?php
+// Author: Sidi Mohamed Ebnou Oumar
 
 namespace App\Controllers;
 
@@ -47,7 +48,11 @@ class CityController
         }
 
         foreach ($candidates as &$candidate) {
-            $candidate['region'] = $this->resolveRegion($candidate['country_code']);
+            $countryData = $this->fetchCountryData($candidate['country_code']);
+            $candidate['region'] = $countryData['region'];
+            // Nominatim's population extratag is frequently absent; REST Countries'
+            // (national-level) figure is a reasonable fallback for display purposes.
+            $candidate['population'] ??= $countryData['population'];
         }
         unset($candidate);
 
@@ -91,32 +96,37 @@ class CityController
             return [409, ['error' => 'City already registered', 'data' => $existing]];
         }
 
+        $countryData = $this->fetchCountryData($best['country_code']);
+
         $created = $this->cities->create([
             'name' => $best['name'],
             'country' => $countryName,
             'latitude' => $best['latitude'],
             'longitude' => $best['longitude'],
-            'population' => $best['population'],
+            'population' => $best['population'] ?? $countryData['population'],
         ]);
 
         return [201, ['data' => $created]];
     }
 
     /**
-     * Best-effort enrichment via REST Countries (e.g. geographic region).
-     * Non-fatal: the module works fully off Nominatim's own `country` field,
-     * so a REST Countries outage never blocks search or registration.
+     * Best-effort enrichment via REST Countries (region, national population fallback).
+     * Non-fatal: the module works fully off Nominatim's own fields, so a missing
+     * API key or a REST Countries outage never blocks search or registration.
+     *
+     * @return array{region: ?string, population: ?int}
      */
-    private function resolveRegion(?string $countryCode): ?string
+    private function fetchCountryData(?string $countryCode): array
     {
         if ($countryCode === null) {
-            return null;
+            return ['region' => null, 'population' => null];
         }
 
         try {
-            return $this->countries->getByCode($countryCode)['region'];
+            $country = $this->countries->getByCode($countryCode);
+            return ['region' => $country['region'], 'population' => $country['population']];
         } catch (RuntimeException) {
-            return null;
+            return ['region' => null, 'population' => null];
         }
     }
 }

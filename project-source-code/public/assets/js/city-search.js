@@ -1,3 +1,5 @@
+// Author: Sidi Mohamed Ebnou Oumar
+
 const searchForm = document.getElementById('search-form');
 const queryInput = document.getElementById('query');
 const resultsList = document.getElementById('results');
@@ -12,6 +14,14 @@ function showStatus(message, isSuccess = false) {
 
 function hideStatus() {
     statusMessage.hidden = true;
+}
+
+// Integration contract with the other dashboard modules (e.g. weather-card.js):
+// they listen for this event to know which city to load data for.
+function dispatchCitySelected(city) {
+    document.dispatchEvent(new CustomEvent('city-selected', {
+        detail: { cityId: city.id, city },
+    }));
 }
 
 async function searchCities(query) {
@@ -43,6 +53,8 @@ async function loadCities() {
 
     for (const city of payload.data || []) {
         const row = document.createElement('tr');
+        row.classList.add('city-row');
+        row.title = 'Click to select this city';
         row.innerHTML = `
             <td>${city.name}</td>
             <td>${city.country}</td>
@@ -51,6 +63,7 @@ async function loadCities() {
             <td>${city.population ?? '—'}</td>
             <td>${city.created_at}</td>
         `;
+        row.addEventListener('click', () => dispatchCitySelected(city));
         citiesTableBody.appendChild(row);
     }
 }
@@ -77,9 +90,10 @@ function renderResults(candidates) {
         button.addEventListener('click', async () => {
             button.disabled = true;
             try {
-                await registerCity(candidate.name, candidate.country_code);
+                const registeredCity = await registerCity(candidate.name, candidate.country_code);
                 showStatus(`"${candidate.name}" registered successfully.`, true);
                 await loadCities();
+                dispatchCitySelected(registeredCity);
             } catch (error) {
                 showStatus(error.message);
             } finally {

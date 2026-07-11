@@ -1,3 +1,5 @@
+/* Author: Sidi Mohamed Ebnou Oumar */
+
 :root {
     --color-primary: #2563eb;
     --color-bg: #f8fafc;
@@ -123,4 +125,12 @@ h1 {
 
 .cities-table th {
     background: #f1f5f9;
+}
+
+.city-row {
+    cursor: pointer;
+}
+
+.city-row:hover {
+    background: #eff6ff;
 }
