@@ -1,0 +1,14 @@
+# Author: Ojong Bessong NKONGHO
+# Routes all requests through index.php (front controller pattern)
+# without this file every PHP file would be directly accessible via URL
+# SetEnvIf line is needed because Apache on WAMP strips the
+# Authorization header before it reaches PHP by default
+
+RewriteEngine On
+
+# pass Authorization header through to PHP
+SetEnvIf Authorization "(.*)" HTTP_AUTHORIZATION=$1
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]

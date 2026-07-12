@@ -1,0 +1,21 @@
+{
+    "name": "smart-city/dashboard",
+    "description": "Smart City Dashboard - Backend Architecture",
+    "require-dev": {
+        "phpunit/phpunit": "^11.5"
+    },
+    "autoload": {
+        "classmap": [
+            "core/",
+            "middleware/",
+            "backend/models/",
+            "backend/controllers/",
+            "backend/services/"
+        ]
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/"
+        ]
+    }
+}
