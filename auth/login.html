@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Author: Hugo -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Smart City Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .form-container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 24px;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .error {
+            color: red;
+            font-size: 13px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .success {
+            color: green;
+            font-size: 13px;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        .register-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <h1>Login</h1>
+
+        <div id="message"></div>
+
+        <input type="email" id="email" placeholder="Email" />
+        <input type="password" id="password" placeholder="Password" />
+
+        <button onclick="login()">Login</button>
+
+        <div class="register-link">
+            Don't have an account? <a href="register.html">Register</a>
+        </div>
+    </div>
+
+    <script>
+        // Author: Hugo
+        // Description: Handles login form submission and token storage
+
+        async function login() {
+
+            // 1. Get form values
+            const email    = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const message  = document.getElementById('message');
+
+            // 2. Basic frontend validation
+            if (!email || !password) {
+                message.className = 'error';
+                message.textContent = 'All fields are required';
+                return;
+            }
+
+            // 3. Call the login API
+            try {
+                const response = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                // 4. Handle the response
+                if (response.ok) {
+                    // 5. Store the token in localStorage
+                    localStorage.setItem('auth_token', data.data.token);
+                    localStorage.setItem('user_id', data.data.user_id);
+                    localStorage.setItem('username', data.data.username);
+
+                    message.className = 'success';
+                    message.textContent = 'Login successful! Redirecting...';
+
+                    // 6. Redirect to dashboard
+                    setTimeout(() => {
+                        window.location.href = '../dashboard.html';
+                    }, 1500);
+                } else {
+                    message.className = 'error';
+                    message.textContent = data.error;
+                }
+
+            } catch (error) {
+                message.className = 'error';
+                message.textContent = 'Server error, please try again';
+            }
+        }
+    </script>
+
+</body>
+</html>
