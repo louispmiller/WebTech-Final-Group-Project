@@ -1,14 +1,19 @@
-name: Tests
+# Author: Ojong Bessong NKONGHO
+# GitHub Actions workflow — runs PHPUnit tests on every push to this branch.
+# Tests use an in-memory SQLite database so no MySQL setup is needed.
+
+name: Tests / PHPUnit (Backend Architecture)
 
 on:
   push:
-    branches: ["**"]
+    branches:
+      - feature/backend-architecture
   pull_request:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   phpunit:
-    name: PHPUnit (City Search & Registration)
     runs-on: ubuntu-latest
 
     steps:
@@ -18,14 +23,12 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: "8.1"
-          extensions: pdo, pdo_sqlite, curl, json
+          php-version: '8.2'
+          extensions: pdo, pdo_sqlite
           coverage: none
 
-      - name: Install Composer dependencies
-        working-directory: project-source-code
-        run: composer install --prefer-dist --no-progress --no-interaction
+      - name: Install dependencies
+        run: composer install --no-interaction --prefer-dist
 
-      - name: Run PHPUnit
-        working-directory: project-source-code
-        run: vendor/bin/phpunit
+      - name: Run PHPUnit tests
+        run: php vendor/bin/phpunit
